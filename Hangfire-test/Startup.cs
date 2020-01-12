@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Hangfire;
+﻿using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,6 +30,8 @@ namespace Hangfire_test
             services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString("hangfire-db")));
             services.AddHangfireServer();
 
+            services.AddScoped<IMailService, MailService>();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -57,6 +54,8 @@ namespace Hangfire_test
 
             app.UseHangfireDashboard();
             app.UseHangfireServer();
+
+            RecurringJob.AddOrUpdate<IMailService>(option => option.SendPeriodicMail(), Cron.MinuteInterval(1));
 
             app.UseMvc(routes =>
             {
