@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -31,6 +32,8 @@ namespace Hangfire_test
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString("hangfire-db")));
+            services.AddHangfireServer();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -51,6 +54,9 @@ namespace Hangfire_test
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+
+            app.UseHangfireDashboard();
+            app.UseHangfireServer();
 
             app.UseMvc(routes =>
             {
