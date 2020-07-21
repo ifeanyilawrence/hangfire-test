@@ -27,7 +27,7 @@ namespace Hangfire_test
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString("hangfire-db")));
+            services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString("hangfire")));
             services.AddHangfireServer();
 
             services.AddScoped<IMailService, MailService>();
@@ -55,7 +55,7 @@ namespace Hangfire_test
             app.UseHangfireDashboard();
             app.UseHangfireServer();
 
-            RecurringJob.AddOrUpdate<IMailService>(option => option.SendPeriodicMail(), Cron.MinuteInterval(1));
+            //RecurringJob.AddOrUpdate<IMailService>(option => option.SendPeriodicMail(), Cron.MinuteInterval(1));
 
             app.UseMvc(routes =>
             {
