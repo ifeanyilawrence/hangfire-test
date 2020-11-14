@@ -52,8 +52,13 @@ namespace Hangfire_test
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
+            var options = new BackgroundJobServerOptions
+            {
+                Queues = new[] { "alpha" }
+            };
+
             app.UseHangfireDashboard();
-            app.UseHangfireServer();
+            app.UseHangfireServer(options);
 
             //RecurringJob.AddOrUpdate<IMailService>(option => option.SendPeriodicMail(), Cron.MinuteInterval(1));
 

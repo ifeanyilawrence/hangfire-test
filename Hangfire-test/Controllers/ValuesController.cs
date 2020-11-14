@@ -29,9 +29,9 @@ namespace Hangfire_test.Controllers
 
         // GET api/<ValuesController>/5
         [HttpGet("{id}")]
-        public string Get([FromQuery] int count)
+        public string Get(int id)
         {
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < id; i++)
             {
                 var test = _backgroundJobClient.Enqueue(() => DoNothing.Nothing(1));
             }
